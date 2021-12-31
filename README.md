@@ -1,6 +1,6 @@
-# Projet Symfony Editor Pour tester Ckeditor5
+# Projet Symfony pour tester CkEditor5
 
-> PHP -v 8
+> PHP 8
 > Symfony 6
 
 ## Implémentation Auto Save
