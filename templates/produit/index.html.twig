@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProductController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="container-fluid">
+    <h1>Hello {{ controller_name }}! ✅</h1>
+
+    <h1 class="text-center">Mes Produits</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Note</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Prix</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for produit in produits %}
+                        <tr>
+                            <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>
+                                <div id="editor{{ loop.index }}">
+                                    {{ produit.note | raw }}
+                                </div>
+                            </td>
+                            <td>{{ produit.description }}</td>
+                            <td>{{ produit.prix }} €</td>
+                        </tr>
+                        <script>
+                            ClassicEditor
+                                .create( document.querySelector( '#editor{{ loop.index }}' ), {
+                                    toolbar: [ 'alignment:left', 'alignment:right', 'alignment:center', 'alignment:justify', '|', 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote', 'undo', 'redo' ],
+                                    autosave: {
+                                        waitingTime: 1000,
+                                        save( editor ) {
+                                            $.ajax({
+                                                method: "POST",
+                                                url: "{{ path('edition_note') }}",
+                                                data: { note: editor.getData(), id_produit: {{ produit.id }} }
+                                            })
+                                            .done(function( msg ) {
+                                                alert( "Data Saved: " + msg );
+                                            });
+                                        }
+                                    }
+                                } )
+                                .then( editor => {
+                                    editor.ui.view.editable.element.style.height = '200px';
+                                } )
+                                .catch( error => {
+                                    console.log( error );
+                                } );
+                        </script>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
